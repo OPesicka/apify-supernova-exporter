@@ -10,15 +10,16 @@
     "author": "Supernova.io",
     "license": "MIT",
     "dependencies": {
+        "@supernovaio/export-helpers": "1.0.8",
         "@supernovaio/sdk-exporters": "2.0.9",
-        "@supernovaio/export-helpers": "1.0.8"
+        "rgb-hex": "^4.1.0"
     },
     "devDependencies": {
         "prettier": "3.0.3",
+        "terser-webpack-plugin": "5.3.9",
         "ts-loader": "^7.0.5",
         "typescript": "^5.2.2",
         "webpack": "5.88.2",
-        "webpack-cli": "^5.1.4",
-        "terser-webpack-plugin": "5.3.9"
+        "webpack-cli": "^5.1.4"
     }
 }

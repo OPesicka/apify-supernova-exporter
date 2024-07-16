@@ -1,17 +1,14 @@
 {
-    "id": "apify.exporters.colors",
-    "name": "CSS w/ theme support",
-    "description": "Export your design system tokens into CSS variables and definitions.",
-    "author": "Apify",
-    "organization": "Apify",
-    "homepage": "https://apify.com",
-    "version": "0.0.1",
-    "usesBrands": true,
-    "usesThemes": true,
-    "executable": "/dist/build.js",
-    "engine": "latest",
-    "tags": [
-        "CSS",
-        "Tokens"
-    ]
+  "id": "apify.exporters.colors",
+  "name": "Apify color exporter",
+  "description": "Exports colors into our design system.",
+  "author": "Apify",
+  "organization": "Apify",
+  "homepage": "https://apify.com",
+  "version": "0.0.2",
+  "usesBrands": true,
+  "usesThemes": true,
+  "executable": "/dist/build.js",
+  "engine": "latest",
+  "tags": ["CSS", "Tokens"]
 }
