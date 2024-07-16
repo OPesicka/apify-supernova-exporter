@@ -20,6 +20,7 @@ Pulsar.export(async (sdk: Supernova, context: PulsarContext): Promise<Array<AnyO
 
   // Fetch the necessary data
   let tokens = await sdk.tokens.getTokens(remoteVersionIdentifier)
+  let darkTokens
   let tokenGroups = await sdk.tokens.getTokenGroups(remoteVersionIdentifier)
 
   // Filter by brand, if specified
@@ -34,25 +35,33 @@ Pulsar.export(async (sdk: Supernova, context: PulsarContext): Promise<Array<AnyO
     tokenGroups = tokenGroups.filter((tokenGroup) => tokenGroup.brandId === brand.id)
   }
 
-  // Apply theme, if specified
-  if (context.themeId) {
-    const themes = await sdk.tokens.getTokenThemes(remoteVersionIdentifier)
-    const theme = themes.find((theme) => theme.id === context.themeId || theme.idInVersion === context.themeId)
-    if (theme) {
-      tokens = await sdk.tokens.computeTokensByApplyingThemes(tokens, [theme])
-    } else {
-      // Don't allow applying theme which doesn't exist in the system
-      throw new Error("Unable to apply theme which doesn't exist in the system.")
-    }
+  const themes = await sdk.tokens.getTokenThemes(remoteVersionIdentifier)
+  const theme = themes.find((theme) => theme.name === "Dark")
+  if (theme) {
+    darkTokens = await sdk.tokens.computeTokensByApplyingThemes(tokens, [theme]);
+  } else {
+    // Don't allow applying theme which doesn't exist in the system
+    throw new Error("Unable to apply theme which doesn't exist in the system.")
   }
+  
+  const lightTokens = tokens
+
+  // const lightPalette = styleOutputFile(TokenType.color, lightTokens, tokenGroups, tokenGroups.find((g) => !g.parentGroupId), "light")
+  // const darkPalette = styleOutputFile(TokenType.color, darkTokens, tokenGroups, tokenGroups.find((g) => !g.parentGroupId), "dark")
+
+  const result = styleOutputFile(TokenType.color, lightTokens, tokenGroups, tokenGroups.find((g) => !g.parentGroupId), lightTokens, darkTokens)
+
 
   // Generate output files
   return [
+    result as AnyOutputFile,
     // One file per token type
-    ...(Object.values(TokenType)
-      .map((type) => styleOutputFile(type, tokens, tokenGroups))
-      .filter((f) => f !== null) as Array<AnyOutputFile>),
+    // ...(Object.values(TokenType)
+    //   .map((type) => styleOutputFile(type, tokens, tokenGroups, tokenGroups.find((g) => !g.parentGroupId)))
+    //   .filter((f) => f !== null) as Array<AnyOutputFile>),
     // One file that imports all other files, if enabled
-    indexOutputFile(tokens),
+
+
+
   ]
 })
