@@ -45,7 +45,7 @@ Pulsar.export(
     }
 
     const themes = await sdk.tokens.getTokenThemes(remoteVersionIdentifier);
-    const theme = themes.find((theme) => theme.name === "Dark");
+    const theme = themes.find((theme) => theme.name === "Dark theme");
     if (theme) {
       darkTokens = await sdk.tokens.computeTokensByApplyingThemes(tokens, [
         theme,
