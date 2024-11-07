@@ -15,14 +15,14 @@ export function styleOutputFile(
   lightTokens: Array<Token>,
   darkTokens: Array<Token>
 ): OutputTextFile | null {
-  const lightPaletteConent = representTree(
+  const lightPaletteContent = representTree(
     rootGroup,
     lightTokens,
     tokenGroups,
     {}
   );
 
-  const darkPaletteConent = representTree(
+  const darkPaletteContent = representTree(
     rootGroup,
     darkTokens,
     tokenGroups,
@@ -35,8 +35,10 @@ export function styleOutputFile(
     fileName: `colors.json`,
     content: JSON.stringify(
       {
-        light: lightPaletteConent,
-        dark: darkPaletteConent,
+        // @ts-ignore -- it exists trust me
+        light: lightPaletteContent.Color,
+        // @ts-ignore -- it exists trust me
+        dark: darkPaletteContent.Color,
       },
       null,
       2
@@ -50,7 +52,7 @@ function representTree(
   allGroups: Array<TokenGroup>,
   writeObject: Object
 ): Object {
-  // Represent one level of groups and tokens inside tree. Creates subobjects and then also information about each token
+  // Represent one level of groups and tokens inside tree. Creates sub-objects and then also information about each token
   for (let group of rootGroup.subgroupIds.map((id) =>
     allGroups.find((g) => g.id === id)
   )) {
@@ -149,11 +151,13 @@ function referenceName(
   if (!token) {
     throw Error("JS: Unable to find token");
   }
-  let occurances = allGroups.filter((g) => g.tokenIds.indexOf(token.id) !== -1);
-  if (occurances.length === 0) {
+  let occurrences = allGroups.filter(
+    (g) => g.tokenIds.indexOf(token.id) !== -1
+  );
+  if (occurrences.length === 0) {
     throw Error("JS: Unable to find token in any of the groups");
   }
-  let containingGroup = occurances[0];
+  let containingGroup = occurrences[0];
   let tokenPart = token;
   let groupParts = referenceGroupChain(containingGroup, allGroups)
     .map((g) => g.name)
@@ -168,18 +172,19 @@ function referenceGroupChain(
   let iteratedGroup = containingGroup;
   let chain = [containingGroup];
   while (iteratedGroup.parentGroupId) {
-    const parrentGroup = allGroups.find(
+    const parentGroup = allGroups.find(
       (g) => g.id === iteratedGroup.parentGroupId
     );
-    if (!parrentGroup) {
+    if (!parentGroup) {
       throw Error("JS: Unable to find parent group");
     }
-    chain.push(parrentGroup);
-    iteratedGroup = parrentGroup;
+    chain.push(parentGroup);
+    iteratedGroup = parentGroup;
   }
 
   const result = chain.reverse();
-  // To match our syntax we need to remove the "Color" group
+  // To match our syntax we need to remove the "Color" group from the "value"
   const resultWithoutColor = result.filter((g) => g.name !== "Color");
+
   return resultWithoutColor;
 }

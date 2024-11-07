@@ -5,7 +5,7 @@
   "author": "Apify",
   "organization": "Apify",
   "homepage": "https://apify.com",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "usesBrands": true,
   "usesThemes": true,
   "executable": "/dist/build.js",

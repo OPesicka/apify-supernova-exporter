@@ -44,12 +44,14 @@ Pulsar.export(
       );
     }
 
+    // The light theme is the default theme
+    const lightTokens = tokens;
+
+    // Get the dark theme
     const themes = await sdk.tokens.getTokenThemes(remoteVersionIdentifier);
     const theme = themes.find((theme) => theme.name === "Dark");
     if (theme) {
-      darkTokens = await sdk.tokens.computeTokensByApplyingThemes(tokens, [
-        theme,
-      ]);
+      darkTokens = theme.overriddenTokens;
     } else {
       // Don't allow applying theme which doesn't exist in the system
       throw new Error(
@@ -57,14 +59,13 @@ Pulsar.export(
       );
     }
 
-    const lightTokens = tokens;
-
+    // Find the root group
     const rootGroup = tokenGroups.find((g) => !g.parentGroupId);
-
     if (!rootGroup) {
       throw new Error("Unable to find root group.");
     }
 
+    // Style the output file
     const result = styleOutputFile(
       tokenGroups,
       rootGroup,
